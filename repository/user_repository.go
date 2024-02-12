@@ -89,3 +89,14 @@ func UpdateUser(email string, user models.UserRequest) error {
   }
   return nil
 }
+
+func DeleteUser(email string) (string, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("users")
+  filter := bson.D{{"email", email}}
+  res, err := collection.DeleteOne(context.Background(), filter)
+  if err != nil {
+    return "", err
+  }
+  return fmt.Sprintf("Deleted %v documents\n", res), nil
+}
