@@ -70,13 +70,18 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
   return user, nil
 }
 
-func UpdateUser(email string, userRaw models.UserResponse) error {
+func UpdateUser(email string, user models.UserRequest) error {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
   filter := bson.D{{"email", email}}
  
-  user := models.NewUserFromResponse(userRaw)
-  update := bson.M{"$set": user}
+  update := bson.M{"$set": bson.M{
+    "first_name": user.FirstName,
+    "last_name": user.LastName,
+    "email": user.Email,
+    "phone_number": user.PhoneNumber,
+    "pin": user.Pin,
+  }}
 
   _, err := collection.UpdateOne(context.Background(), filter, update)
   if err != nil {

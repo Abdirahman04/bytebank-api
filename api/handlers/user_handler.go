@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -50,11 +51,12 @@ func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   email := mux.Vars(r)["email"]
-  var user models.UserResponse
+  var user models.UserRequest
   json.NewDecoder(r.Body).Decode(&user)
   err := repository.UpdateUser(email, user)
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
+    fmt.Println(err)
     return
   }
   w.WriteHeader(http.StatusOK)

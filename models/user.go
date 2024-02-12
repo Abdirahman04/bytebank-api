@@ -54,15 +54,3 @@ func NewUserResponse(user User) UserResponse {
     DateOfCreation: user.DateOfCreation,
   }
 }
-
-func NewUserFromResponse(user UserResponse) User {
-  return User{
-    CustomerID: user.CustomerID,
-    FirstName: user.FirstName,
-    LastName: user.LastName,
-    Email: user.Email,
-    PhoneNumber: user.PhoneNumber,
-    Pin: user.Pin,
-    DateOfCreation: user.DateOfCreation,
-  }
-}
