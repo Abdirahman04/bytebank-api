@@ -19,3 +19,7 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
   res, err := repository.GetUserByEmail(email)
   return res, err
 }
+
+func UpdateUser(email string, user models.UserRequest) error {
+  return repository.UpdateUser(email, user)
+}
