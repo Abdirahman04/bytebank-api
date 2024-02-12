@@ -9,3 +9,9 @@ type Account struct {
   Amount float32 `bson:"amount"`
   DateOfCreation time.Time `bson:"date_of_creation"`
 }
+
+
+type AccountRequest struct {
+  CustomerID string `json:"customer_id"`
+  AccountType string `json:"account_type"`
+}
