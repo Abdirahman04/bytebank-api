@@ -36,3 +36,14 @@ func NewTransaction(transaction TransactionRequest) Transaction {
     DateOfCreation: time.Now(),
   }
 }
+
+func NewTransactionResponse(transaction Transaction) TransactionResponse {
+  return TransactionResponse{
+    TransactionID: transaction.TransactionID,
+    AccountID: transaction.AccountID,
+    TransactionType: transaction.TransactionType,
+    Target: transaction.Target,
+    Balance: transaction.Balance,
+    DateOfCreation: transaction.DateOfCreation,
+  }
+}
