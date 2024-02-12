@@ -15,6 +15,14 @@ type AccountRequest struct {
   AccountType string `json:"account_type"`
 }
 
+type AccountResponse struct {
+  AccountID string `json:"accountid"`
+  CustomerID string `json:"customerid"`
+  AccountType string `json:"accounttype"`
+  Amount float32 `json:"amount"`
+  DateOfCreation time.Time `json:"dateofcreation"`
+}
+
 func NewAccount(account AccountRequest) Account {
   return Account{
     CustomerID: account.CustomerID,
