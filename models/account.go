@@ -31,3 +31,13 @@ func NewAccount(account AccountRequest) Account {
     DateOfCreation: time.Now(),
   }
 }
+
+func NewAccountResponse(account Account) AccountResponse {
+  return AccountResponse{
+    AccountID: account.AccountID,
+    CustomerID: account.CustomerID,
+    AccountType: account.AccountType,
+    Amount: account.Amount,
+    DateOfCreation: account.DateOfCreation,
+  }
+}
