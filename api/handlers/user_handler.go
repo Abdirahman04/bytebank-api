@@ -62,3 +62,14 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode("Update successful")
 }
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  email := mux.Vars(r)["email"]
+  res, err := repository.DeleteUser(email)
+  if err != nil {
+    http.Error(w, "Bad request", http.StatusBadRequest)
+  }
+  w.WriteHeader(http.StatusOK)
+  json.NewEncoder(w).Encode(res)
+}
