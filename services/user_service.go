@@ -23,3 +23,8 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
 func UpdateUser(email string, user models.UserRequest) error {
   return repository.UpdateUser(email, user)
 }
+
+func DeleteUser(email string) (string, error) {
+  res, err := repository.DeleteUser(email)
+  return res, err
+}
