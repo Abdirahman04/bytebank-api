@@ -18,6 +18,15 @@ type TransactionRequest struct {
   Balance float32 `json:"balance"`
 }
 
+type TransactionResponse struct {
+  TransactionID string `json:"transactionid"`
+  AccountID string `json:"accountid"`
+  TransactionType string `json:"transactiontype"`
+  Target string `json:"target"`
+  Balance float32 `json:"balance"`
+  DateOfCreation time.Time `json:"dateofcreation"`
+}
+
 func NewTransaction(transaction TransactionRequest) Transaction {
   return Transaction{
     AccountID: transaction.AccountID,
