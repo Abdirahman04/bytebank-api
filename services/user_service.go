@@ -14,3 +14,8 @@ func GetUsers() ([]models.UserResponse, error) {
   res, err := repository.GetUsers()
   return res, err
 }
+
+func GetUserByEmail(email string) (models.UserResponse, error) {
+  res, err := repository.GetUserByEmail(email)
+  return res, err
+}
