@@ -9,3 +9,8 @@ func SaveUser(user models.UserRequest) (string, error) {
   res, err := repository.SaveUser(user)
   return res, err
 }
+
+func GetUsers() ([]models.UserResponse, error) {
+  res, err := repository.GetUsers()
+  return res, err
+}
