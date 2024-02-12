@@ -8,6 +8,7 @@ import (
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
+	"github.com/Abdirahman04/bytebank-api/services"
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +19,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
   }
-  res, err := repository.SaveUser(newUser)
+  res, err := services.SaveUser(newUser)
   if err != nil {
     log.Fatal(err)
     return
@@ -29,7 +30,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  users, err := repository.GetUsers()
+  users, err := services.GetUsers()
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
   }
@@ -40,7 +41,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   email := mux.Vars(r)["email"]
-  user, err := repository.GetUserByEmail(email)
+  user, err := services.GetUserByEmail(email)
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
   }
@@ -53,7 +54,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
   email := mux.Vars(r)["email"]
   var user models.UserRequest
   json.NewDecoder(r.Body).Decode(&user)
-  err := repository.UpdateUser(email, user)
+  err := services.UpdateUser(email, user)
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
     fmt.Println(err)
@@ -66,7 +67,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   email := mux.Vars(r)["email"]
-  res, err := repository.DeleteUser(email)
+  res, err := services.DeleteUser(email)
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
   }
