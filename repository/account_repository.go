@@ -9,10 +9,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func SaveAccount(accountRequest models.AccountRequest) (string, error) {
+func SaveAccount(account models.Account) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
-  account := models.NewAccount(accountRequest)
   res, err := collection.InsertOne(context.Background(), account)
   if err != nil {
     log.Fatal(err)
@@ -21,7 +20,7 @@ func SaveAccount(accountRequest models.AccountRequest) (string, error) {
   return fmt.Sprintf("New account added: %v",res.InsertedID), nil
 }
 
-func GetAccounts() ([]models.AccountResponse, error) {
+func GetAccounts() ([]models.Account, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
   filter := bson.D{}
@@ -31,15 +30,14 @@ func GetAccounts() ([]models.AccountResponse, error) {
     return nil, err
   }
   defer curr.Close(context.Background())
-  var accounts []models.AccountResponse
+  var accounts []models.Account
   for curr.Next(context.Background()) {
-    var rawAccount models.Account
-    err := curr.Decode(&rawAccount)
+    var account models.Account
+    err := curr.Decode(&account)
     if err != nil {
       log.Fatal(err)
       return nil, err
     }
-    account := models.NewAccountResponse(rawAccount)
     accounts = append(accounts, account)
   }
   return accounts, nil
