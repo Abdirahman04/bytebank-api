@@ -7,6 +7,7 @@ import (
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/services"
+	"github.com/gorilla/mux"
 )
 
 func PostAccount(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +27,16 @@ func PostAccount(w http.ResponseWriter, r *http.Request) {
 func GetAccounts(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   res, err := services.GetAccounts()
+  if err != nil {
+    log.Fatal(err)
+  }
+  json.NewEncoder(w).Encode(res)
+}
+
+func GetAccountById(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  id := mux.Vars(r)["id"]
+  res, err := services.GetAccountById(id)
   if err != nil {
     log.Fatal(err)
   }
