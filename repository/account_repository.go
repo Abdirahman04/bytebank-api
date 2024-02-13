@@ -75,3 +75,15 @@ func ChangeAmount(id string, amount float32) (string, error) {
   }
   return fmt.Sprint("Updated", res), nil
 }
+
+func DeleteAccount(id string) (string, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("accounts")
+  filter := bson.M{"_id": id}
+  res, err := collection.DeleteOne(context.Background(), filter)
+  if err != nil {
+    log.Fatal(err)
+    return "", err
+  }
+  return fmt.Sprint("Deleted", res.DeletedCount), nil
+}
