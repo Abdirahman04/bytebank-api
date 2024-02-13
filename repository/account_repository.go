@@ -56,3 +56,22 @@ func GetAccountById(id string) (models.Account, error) {
   }
   return account, err
 }
+
+func ChangeAmount(id string, amount float32) (string, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("accounts")
+  account, err := GetAccountById(id)
+  if err != nil {
+    log.Fatal(err)
+    return "", err
+  }
+  newAmount := account.Amount + amount
+  filter := bson.M{"_id": id}
+  update := bson.M{"$set": bson.M{"amount": newAmount}}
+  res, err := collection.UpdateOne(context.Background(), filter, update)
+  if err != nil {
+    log.Fatal(err)
+    return "", err
+  }
+  return fmt.Sprint("Updated", res), nil
+}
