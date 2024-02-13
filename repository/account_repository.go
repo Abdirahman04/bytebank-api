@@ -11,7 +11,7 @@ import (
 
 func SaveAccount(accountRequest models.AccountRequest) (string, error) {
   client := Connect()
-  collection := client.Database("bytebank").Collection("account")
+  collection := client.Database("bytebank").Collection("accounts")
   account := models.NewAccount(accountRequest)
   res, err := collection.InsertOne(context.Background(), account)
   if err != nil {
@@ -23,7 +23,7 @@ func SaveAccount(accountRequest models.AccountRequest) (string, error) {
 
 func GetAccounts() ([]models.AccountResponse, error) {
   client := Connect()
-  collection := client.Database("bytebank").Collection("account")
+  collection := client.Database("bytebank").Collection("accounts")
   filter := bson.D{}
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
@@ -43,4 +43,16 @@ func GetAccounts() ([]models.AccountResponse, error) {
     accounts = append(accounts, account)
   }
   return accounts, nil
+}
+
+func GetAccountById(id string) (models.Account, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("accounts")
+  filter := bson.M{"_id": id}
+  var account models.Account
+  err := collection.FindOne(context.Background(), filter).Decode(&account)
+  if err != nil {
+    return account, err
+  }
+  return account, err
 }
