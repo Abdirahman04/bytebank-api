@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/Abdirahman04/bytebank-api/models"
-	"github.com/Abdirahman04/bytebank-api/repository"
 	"github.com/Abdirahman04/bytebank-api/services"
 	"github.com/gorilla/mux"
 )
