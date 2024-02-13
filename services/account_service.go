@@ -26,3 +26,13 @@ func GetAccountById(id string) (models.AccountResponse, error) {
   account := models.NewAccountResponse(res)
   return account, err
 }
+
+func DepositAccount(id string, amount float32) (string, error) {
+  res, err := repository.ChangeAmount(id, amount)
+  return res, err
+}
+
+func WithdrawAccount(id string, amount float32) (string, error) {
+  res, err := repository.ChangeAmount(id, -amount)
+  return res, err
+}
