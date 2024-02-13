@@ -22,3 +22,12 @@ func PostAccount(w http.ResponseWriter, r *http.Request) {
   }
   json.NewEncoder(w).Encode(res)
 }
+
+func GetAccounts(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  res, err := services.GetAccounts()
+  if err != nil {
+    log.Fatal(err)
+  }
+  json.NewEncoder(w).Encode(res)
+}
