@@ -36,3 +36,8 @@ func WithdrawAccount(id string, amount float32) (string, error) {
   res, err := repository.ChangeAmount(id, -amount)
   return res, err
 }
+
+func DeleteAccount(id string) (string, error) {
+  res, err := repository.DeleteAccount(id)
+  return res, err
+}
