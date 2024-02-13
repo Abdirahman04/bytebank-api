@@ -20,3 +20,9 @@ func GetAccounts() ([]models.AccountResponse, error) {
   }
   return accounts, err
 }
+
+func GetAccountById(id string) (models.AccountResponse, error) {
+  res, err := repository.GetAccountById(id)
+  account := models.NewAccountResponse(res)
+  return account, err
+}
