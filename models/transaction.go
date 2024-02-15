@@ -12,8 +12,8 @@ type Transaction struct {
 }
 
 type TransactionRequest struct {
-  AccountID string `json:"account_id"`
-  TransactionType string `json:"transaction_type"`
+  AccountID string `json:"accountid"`
+  TransactionType string `json:"transactiontype"`
   Target string `json:"target"`
   Balance float32 `json:"balance"`
 }
