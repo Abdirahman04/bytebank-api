@@ -26,3 +26,13 @@ func GetTransactionById(id string) (models.TransactionResponse, error) {
   newTransaction := models.NewTransactionResponse(transaction)
   return newTransaction, err
 }
+
+func GetTransactionsByAccountId(id string) ([]models.TransactionResponse, error) {
+  var transactions []models.TransactionResponse
+  res, err := repository.GetTransactionsByAccountId(id)
+  for _, trans := range res {
+    newTransaction := models.NewTransactionResponse(trans)
+    transactions = append(transactions, newTransaction)
+  }
+  return transactions, err
+}
