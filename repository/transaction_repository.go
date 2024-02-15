@@ -55,3 +55,31 @@ func GetTransactionById(id string) (models.Transaction, error) {
   }
   return transaction, nil
 }
+
+func GetTransactionsByAccountId(id string) ([]models.Transaction, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("transactions")
+  var transactions []models.Transaction
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return nil, err
+  }
+  filter := bson.M{"$or": []bson.M{
+    {"account_id": objectId},
+    {"target": objectId},
+  }}
+  curr, err := collection.Find(context.Background(), filter)
+  if err != nil {
+    return nil, err
+  }
+  defer curr.Close(context.Background())
+  for curr.Next(context.Background()) {
+    var transaction models.Transaction
+    err = curr.Decode(&transaction)
+    if err != nil {
+      return nil, err
+    }
+    transactions = append(transactions, transaction)
+  }
+  return transactions, nil
+}
