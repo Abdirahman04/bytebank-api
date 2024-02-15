@@ -36,3 +36,8 @@ func GetTransactionsByAccountId(id string) ([]models.TransactionResponse, error)
   }
   return transactions, err
 }
+
+func DeleteTransaction(id string) (string, error) {
+  res, err := repository.DeleteAccount(id)
+  return res, err
+}
