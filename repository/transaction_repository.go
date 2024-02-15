@@ -60,13 +60,9 @@ func GetTransactionsByAccountId(id string) ([]models.Transaction, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
   var transactions []models.Transaction
-  objectId, err := primitive.ObjectIDFromHex(id)
-  if err != nil {
-    return nil, err
-  }
   filter := bson.M{"$or": []bson.M{
-    {"account_id": objectId},
-    {"target": objectId},
+    {"account_id": id},
+    {"target": id},
   }}
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
@@ -102,13 +98,9 @@ func DeleteTransaction(id string) (string, error) {
 func DeleteTransactionsByAccountId(id string) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
-  objectId, err := primitive.ObjectIDFromHex(id)
-  if err != nil {
-    return "", err
-  }
   filter := bson.M{"$or": []bson.M{
-    {"account_id": objectId},
-    {"target": objectId},
+    {"account_id": id},
+    {"target": id},
   }}
   res, err := collection.DeleteMany(context.Background(), filter)
   if err != nil {
