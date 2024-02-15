@@ -20,3 +20,9 @@ func GetTransactions() ([]models.TransactionResponse, error) {
   }
   return transactions, err
 }
+
+func GetTransactionById(id string) (models.TransactionResponse, error) {
+  transaction, err := repository.GetTransactionById(id)
+  newTransaction := models.NewTransactionResponse(transaction)
+  return newTransaction, err
+}
