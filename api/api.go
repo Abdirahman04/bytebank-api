@@ -14,6 +14,7 @@ func Start() error {
 
   routes.SetUserRoutes(router)
   routes.SetAccountRoutes(router)
+  routes.SetTransactionRoutes(router)
 
   port := ":8080"
   fmt.Printf("Server is running on port %s", port)
