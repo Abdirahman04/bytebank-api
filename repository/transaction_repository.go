@@ -98,3 +98,21 @@ func DeleteTransaction(id string) (string, error) {
   }
   return fmt.Sprint("Deleted", res.DeletedCount), nil
 }
+
+func DeleteTransactionsByAccountId(id string) (string, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("transactions")
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return "", err
+  }
+  filter := bson.M{"$or": []bson.M{
+    {"account_id": objectId},
+    {"target": objectId},
+  }}
+  res, err := collection.DeleteMany(context.Background(), filter)
+  if err != nil {
+    return "", err
+  }
+  return fmt.Sprint("Deleted", res.DeletedCount), nil
+}
