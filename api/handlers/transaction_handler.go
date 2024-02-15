@@ -51,3 +51,13 @@ func GetTransactionsByAccountId(w http.ResponseWriter, r *http.Request) {
   }
   json.NewEncoder(w).Encode(res)
 }
+
+func DeleteTransaction(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  id := mux.Vars(r)["id"]
+  res, err := services.GetTransactionsByAccountId(id)
+  if err != nil {
+    http.Error(w, "Bad Request", http.StatusBadRequest)
+  }
+  json.NewEncoder(w).Encode(res)
+}
