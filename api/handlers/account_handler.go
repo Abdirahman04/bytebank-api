@@ -38,8 +38,9 @@ func GetAccountById(w http.ResponseWriter, r *http.Request) {
   id := mux.Vars(r)["id"]
   res, err := services.GetAccountById(id)
   if err != nil {
-    log.Fatal(err)
+    http.Error(w, "User not found", http.StatusNotFound)
   }
+  w.Header().Set("Content-Type", "application/json")
   json.NewEncoder(w).Encode(res)
 }
 

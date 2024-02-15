@@ -7,6 +7,7 @@ import (
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func SaveAccount(account models.Account) (string, error) {
@@ -43,16 +44,20 @@ func GetAccounts() ([]models.Account, error) {
   return accounts, nil
 }
 
-func GetAccountById(id string) (models.Account, error) {
+func GetAccountById(id string) (*models.Account, error) {
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return nil, err
+  }
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
-  filter := bson.M{"_id": id}
+  filter := bson.M{"_id": objectId}
   var account models.Account
-  err := collection.FindOne(context.Background(), filter).Decode(&account)
+  err = collection.FindOne(context.Background(), filter).Decode(&account)
   if err != nil {
-    return account, err
+    return nil, err
   }
-  return account, err
+  return &account, err
 }
 
 func ChangeAmount(id string, amount float32) (string, error) {
@@ -75,9 +80,13 @@ func ChangeAmount(id string, amount float32) (string, error) {
 }
 
 func DeleteAccount(id string) (string, error) {
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return "", err
+  }
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
-  filter := bson.M{"_id": id}
+  filter := bson.M{"_id": objectId}
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     log.Fatal(err)

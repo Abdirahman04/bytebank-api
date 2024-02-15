@@ -11,8 +11,8 @@ type Account struct {
 }
 
 type AccountRequest struct {
-  CustomerID string `json:"customer_id"`
-  AccountType string `json:"account_type"`
+  CustomerID string `json:"customerid"`
+  AccountType string `json:"accounttype"`
 }
 
 type AccountResponse struct {

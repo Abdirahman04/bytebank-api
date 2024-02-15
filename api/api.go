@@ -13,6 +13,7 @@ func Start() error {
   router := mux.NewRouter()
 
   routes.SetUserRoutes(router)
+  routes.SetAccountRoutes(router)
 
   port := ":8080"
   fmt.Printf("Server is running on port %s", port)

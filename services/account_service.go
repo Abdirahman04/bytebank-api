@@ -23,7 +23,7 @@ func GetAccounts() ([]models.AccountResponse, error) {
 
 func GetAccountById(id string) (models.AccountResponse, error) {
   res, err := repository.GetAccountById(id)
-  account := models.NewAccountResponse(res)
+  account := models.NewAccountResponse(*res)
   return account, err
 }
 
