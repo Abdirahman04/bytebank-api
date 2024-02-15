@@ -21,3 +21,12 @@ func PostTransaction(w http.ResponseWriter, r *http.Request) {
   }
   json.NewEncoder(w).Encode(res)
 }
+
+func GetTransactions(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  res, err := services.GetTransactions()
+  if err != nil {
+    http.Error(w, "Bad request", http.StatusBadRequest)
+  }
+  json.NewEncoder(w).Encode(res)
+}
