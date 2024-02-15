@@ -10,3 +10,13 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
   res, err := repository.SaveTransaction(newTransaction)
   return res, err
 }
+
+func GetTransactions() ([]models.TransactionResponse, error) {
+  var transactions []models.TransactionResponse
+  res, err := repository.GetTransactions()
+  for _, trans := range res {
+    newTransaction := models.NewTransactionResponse(trans)
+    transactions = append(transactions, newTransaction)
+  }
+  return transactions, err
+}
