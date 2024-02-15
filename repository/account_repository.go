@@ -60,6 +60,31 @@ func GetAccountById(id string) (*models.Account, error) {
   return &account, err
 }
 
+func GetAccountsByCustomerId(id string) ([]models.Account, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("accounts")
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return nil, err
+  }
+  filter := bson.M{"customer_id": objectId}
+  var accounts []models.Account
+  curr, err := collection.Find(context.Background(), filter)
+  if err != nil {
+    return nil, err
+  }
+  defer curr.Close(context.Background())
+  for curr.Next(context.Background()) {
+    var account models.Account
+    err = curr.Decode(&account)
+    if err != nil {
+      return nil, err
+    }
+    accounts = append(accounts, account)
+  }
+  return accounts, nil
+}
+
 func ChangeAmount(id string, amount float32) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
