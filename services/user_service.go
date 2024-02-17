@@ -24,7 +24,22 @@ func UpdateUser(email string, user models.UserRequest) error {
   return repository.UpdateUser(email, user)
 }
 
-func DeleteUser(email string) (string, error) {
-  res, err := repository.DeleteUser(email)
+func DeleteUser(id string) (string, error) {
+  accounts, err := repository.GetAccountsByCustomerId(id)
+  if err != nil {
+    return "", err
+  }
+  for _, account := range accounts {
+    _, err := repository.DeleteTransactionsByAccountId(account.AccountID)
+    if err != nil {
+      return "", err
+    }
+    _, err = repository.DeleteAccount(account.AccountID)
+    if err != nil {
+      return "", err
+    }
+  }
+
+  res, err := repository.DeleteUser(id)
   return res, err
 }
