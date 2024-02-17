@@ -8,7 +8,7 @@ import (
 )
 
 func PostAccount(rawAccount models.AccountRequest) (string, error) {
-  _, err := repository.GetUserById(rawAccount.CustomerID)
+  _, err := GetUserById(rawAccount.CustomerID)
   if err != nil {
     return "", err
   }

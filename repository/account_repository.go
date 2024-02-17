@@ -12,12 +12,15 @@ import (
 )
 
 func SaveAccount(account models.Account) (string, error) {
+  log.Println("SaveAccount in repository hit")
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
   res, err := collection.InsertOne(context.Background(), account)
   if err != nil {
+    log.Println("error inserting account", err)
     return "", errors.New("Error adding account")
   }
+  log.Println("SaveAccount in repository success")
   return fmt.Sprintf("New account added: %v",res.InsertedID), nil
 }
 
