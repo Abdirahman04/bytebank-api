@@ -2,12 +2,14 @@ package services
 
 import (
 	"errors"
+	"log"
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
 )
 
 func PostAccount(rawAccount models.AccountRequest) (string, error) {
+  log.Println("PostAccount in services hit")
   _, err := GetUserById(rawAccount.CustomerID)
   if err != nil {
     return "", err
