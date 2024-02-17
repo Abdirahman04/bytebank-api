@@ -107,10 +107,14 @@ func UpdateUser(email string, user models.UserRequest) error {
   return nil
 }
 
-func DeleteUser(email string) (string, error) {
+func DeleteUser(id string) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
-  filter := bson.D{{"email", email}}
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return "", err
+  }
+  filter := bson.M{"_id": objectId}
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     return "", err
