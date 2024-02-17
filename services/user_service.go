@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
 )
@@ -13,6 +15,15 @@ func SaveUser(user models.UserRequest) (string, error) {
 func GetUsers() ([]models.UserResponse, error) {
   res, err := repository.GetUsers()
   return res, err
+}
+
+func GetUserById(id string) (models.UserResponse, error) {
+  res, err := repository.GetUserById(id)
+  if err != nil {
+    return models.UserResponse{}, errors.New("no user found")
+  }
+  user := models.NewUserResponse(res)
+  return user, nil
 }
 
 func GetUserByEmail(email string) (models.UserResponse, error) {
