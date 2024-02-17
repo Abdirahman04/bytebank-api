@@ -65,8 +65,8 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  email := mux.Vars(r)["email"]
-  res, err := services.DeleteUser(email)
+  id := mux.Vars(r)["id"]
+  res, err := services.DeleteUser(id)
   if err != nil {
     http.Error(w, "Bad request", http.StatusBadRequest)
   }

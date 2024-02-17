@@ -1,12 +1,24 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
 )
 
 func PostAccount(rawAccount models.AccountRequest) (string, error) {
+  _, err := repository.GetUserById(rawAccount.CustomerID)
+  if err != nil {
+    return "", err
+  }
   account := models.NewAccount(rawAccount)
+  types := [3]string{"savings","checking","investment"}
+  for _,typ := range types {
+    if account.AccountType != typ {
+      return "", errors.New("Invalid account type")
+    }
+  }
   res, err := repository.SaveAccount(account)
   return res, err
 }
