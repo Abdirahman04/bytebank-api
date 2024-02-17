@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
@@ -15,8 +16,7 @@ func SaveAccount(account models.Account) (string, error) {
   collection := client.Database("bytebank").Collection("accounts")
   res, err := collection.InsertOne(context.Background(), account)
   if err != nil {
-    log.Fatal(err)
-    return "", err
+    return "", errors.New("Error adding account")
   }
   return fmt.Sprintf("New account added: %v",res.InsertedID), nil
 }
