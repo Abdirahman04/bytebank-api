@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
 )
@@ -39,6 +41,7 @@ func GetTransactionsByAccountId(id string) ([]models.TransactionResponse, error)
 
 func DeleteTransaction(id string) (string, error) {
   res, err := repository.DeleteTransaction(id)
+  fmt.Println("serv-hit")
   return res, err
 }
 

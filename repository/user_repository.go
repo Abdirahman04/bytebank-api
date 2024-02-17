@@ -8,6 +8,7 @@ import (
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -67,6 +68,22 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
     return models.UserResponse{}, err
   }
   user := models.NewUserResponse(rawUser)
+  return user, nil
+}
+
+func GetUserById(id string) (models.User, error) {
+  client := Connect()
+  collection := client.Database("bytebank").Collection("users")
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
+    return models.User{}, err
+  }
+  filter := bson.M{"_id": objectId}
+  var user models.User
+  err = collection.FindOne(context.Background(), filter).Decode(&user)
+  if err != nil {
+    return user, err
+  }
   return user, nil
 }
 

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/Abdirahman04/bytebank-api/models"
@@ -55,9 +56,10 @@ func GetTransactionsByAccountId(w http.ResponseWriter, r *http.Request) {
 func DeleteTransaction(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   id := mux.Vars(r)["id"]
-  res, err := services.GetTransactionsByAccountId(id)
+  res, err := services.DeleteTransaction(id)
   if err != nil {
     http.Error(w, "Bad Request", http.StatusBadRequest)
   }
+  fmt.Println("hand-hit")
   json.NewEncoder(w).Encode(res)
 }

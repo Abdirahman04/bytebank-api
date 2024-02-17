@@ -81,15 +81,18 @@ func GetTransactionsByAccountId(id string) ([]models.Transaction, error) {
 }
 
 func DeleteTransaction(id string) (string, error) {
+  fmt.Println("rep-hit")
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
+    fmt.Println("err with objectId")
     return "", err
   }
   filter := bson.M{"_id": objectId}
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
+    fmt.Println("err with deleting")
     return "", err
   }
   return fmt.Sprint("Deleted", res.DeletedCount), nil
