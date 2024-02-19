@@ -65,7 +65,7 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
   var rawUser models.User
   err := collection.FindOne(context.Background(), filter).Decode(&rawUser)
   if err != nil {
-    log.Fatal(err)
+    log.Println("Error getting user by email:", err)
     return models.UserResponse{}, err
   }
   user := models.NewUserResponse(rawUser)

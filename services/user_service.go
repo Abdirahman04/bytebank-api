@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
@@ -25,7 +26,8 @@ func GetUsers() ([]models.UserResponse, error) {
 func GetUserById(id string) (models.UserResponse, error) {
   res, err := repository.GetUserById(id)
   if err != nil {
-    return models.UserResponse{}, errors.New("no user found")
+    txt := fmt.Sprintf("no user with id %v found", id)
+    return models.UserResponse{}, errors.New(txt)
   }
   user := models.NewUserResponse(res)
   return user, nil
@@ -33,7 +35,11 @@ func GetUserById(id string) (models.UserResponse, error) {
 
 func GetUserByEmail(email string) (models.UserResponse, error) {
   res, err := repository.GetUserByEmail(email)
-  return res, err
+  if err != nil {
+    txt := fmt.Sprintf("no user with email %v found", email)
+    return models.UserResponse{}, errors.New(txt)
+  }
+  return res, nil
 }
 
 func UpdateUser(email string, user models.UserRequest) error {

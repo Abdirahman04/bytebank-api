@@ -60,7 +60,10 @@ func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
   email := mux.Vars(r)["email"]
   user, err := services.GetUserByEmail(email)
   if err != nil {
-    http.Error(w, "Bad request", http.StatusBadRequest)
+    log.Println("Error getting email:", err)
+    w.WriteHeader(http.StatusNotFound)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(user)
