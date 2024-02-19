@@ -35,6 +35,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
     log.Println("Can't get users:", err)
     w.WriteHeader(http.StatusNotFound)
     json.NewEncoder(w).Encode(err.Error())
+    return
   }
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(users)
@@ -45,8 +46,10 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
   id := mux.Vars(r)["id"]
   user, err := services.GetUserById(id)
   if err != nil {
+    log.Println("Error getting user:", err)
     w.WriteHeader(http.StatusNotFound)
-    json.NewEncoder(w).Encode(err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(user)
