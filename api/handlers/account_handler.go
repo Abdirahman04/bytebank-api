@@ -32,7 +32,9 @@ func GetAccounts(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   res, err := services.GetAccounts()
   if err != nil {
-    log.Fatal(err)
+    log.Println("Error getting account:", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   json.NewEncoder(w).Encode(res)
 }
@@ -42,7 +44,22 @@ func GetAccountById(w http.ResponseWriter, r *http.Request) {
   id := mux.Vars(r)["id"]
   res, err := services.GetAccountById(id)
   if err != nil {
-    http.Error(w, "User not found", http.StatusNotFound)
+    log.Println("Error getting account by id:", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  json.NewEncoder(w).Encode(res)
+}
+
+func GetAccountByCustomerId(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  id := mux.Vars(r)["id"]
+  res, err := services.GetAccountById(id)
+  if err != nil {
+    log.Println("Error getting account by customer id:", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   w.Header().Set("Content-Type", "application/json")
   json.NewEncoder(w).Encode(res)
