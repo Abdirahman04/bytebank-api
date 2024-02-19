@@ -76,8 +76,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
   json.NewDecoder(r.Body).Decode(&user)
   err := services.UpdateUser(email, user)
   if err != nil {
-    http.Error(w, "Bad request", http.StatusBadRequest)
-    fmt.Println(err)
+    w.WriteHeader(http.StatusInternalServerError)
+    log.Println("Error updating user:", err)
+    json.NewEncoder(w).Encode(err.Error())
     return
   }
   w.WriteHeader(http.StatusOK)
@@ -89,7 +90,10 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
   id := mux.Vars(r)["id"]
   res, err := services.DeleteUser(id)
   if err != nil {
-    http.Error(w, "Bad request", http.StatusBadRequest)
+    log.Println("Error deleting user:", err)
+    w.WriteHeader(http.StatusInternalServerError)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(res)
