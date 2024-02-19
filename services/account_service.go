@@ -39,6 +39,19 @@ func GetAccountById(id string) (models.AccountResponse, error) {
   return account, err
 }
 
+func GetAccountsByCustomerId(id string) ([]models.AccountResponse, error) {
+  var accounts []models.AccountResponse
+  res, err := repository.GetAccountsByCustomerId(id)
+  if err != nil {
+    return nil, err
+  }
+  for _, account := range res {
+    newAccount := models.NewAccountResponse(account)
+    accounts = append(accounts, newAccount)
+  }
+  return accounts, nil
+}
+
 func DepositAccount(id string, amount float32) (string, error) {
   res, err := repository.ChangeAmount(id, amount)
   return res, err

@@ -81,7 +81,7 @@ func GetAccountsByCustomerId(id string) ([]models.Account, error) {
     var account models.Account
     err = curr.Decode(&account)
     if err != nil {
-      return nil, err
+      continue
     }
     accounts = append(accounts, account)
   }
