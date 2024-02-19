@@ -1,11 +1,11 @@
 package services
 
 import (
-	"errors"
 	"log"
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
+	"github.com/Abdirahman04/bytebank-api/validations"
 )
 
 func PostAccount(rawAccount models.AccountRequest) (string, error) {
@@ -15,11 +15,9 @@ func PostAccount(rawAccount models.AccountRequest) (string, error) {
     return "", err
   }
   account := models.NewAccount(rawAccount)
-  types := [3]string{"savings","checking","investment"}
-  for _,typ := range types {
-    if account.AccountType != typ {
-      return "", errors.New("Invalid account type")
-    }
+  err = validations.ValidateAccount(account)
+  if err != nil {
+    return "", err
   }
   res, err := repository.SaveAccount(account)
   return res, err

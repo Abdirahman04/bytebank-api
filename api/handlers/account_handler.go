@@ -17,6 +17,7 @@ func PostAccount(w http.ResponseWriter, r *http.Request) {
   err := json.NewDecoder(r.Body).Decode(&account)
   if err != nil {
     log.Println("Error decoding account", err)
+    w.WriteHeader(http.StatusInternalServerError)
   }
   res, err := services.PostAccount(account)
   if err != nil {

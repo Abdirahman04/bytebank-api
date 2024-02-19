@@ -6,7 +6,7 @@ import (
 	"github.com/Abdirahman04/bytebank-api/models"
 )
 
-func ValidateAccount(account models.AccountRequest) error {
+func ValidateAccount(account models.Account) error {
   typ := account.AccountType
   accountTypes := [3]string{"savings", "checking", "investment"}
   for _, t := range accountTypes {
