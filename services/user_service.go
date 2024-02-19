@@ -5,9 +5,14 @@ import (
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
+	"github.com/Abdirahman04/bytebank-api/validations"
 )
 
 func SaveUser(user models.UserRequest) (string, error) {
+  err := validations.ValidateUser(user)
+  if err != nil {
+    return "", err
+  }
   res, err := repository.SaveUser(user)
   return res, err
 }
