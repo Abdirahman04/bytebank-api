@@ -40,6 +40,7 @@ func GetAccountById(id string) (models.AccountResponse, error) {
 }
 
 func GetAccountsByCustomerId(id string) ([]models.AccountResponse, error) {
+  log.Println("GetAccountsByCustomerId serv hit")
   var accounts []models.AccountResponse
   res, err := repository.GetAccountsByCustomerId(id)
   if err != nil {
