@@ -43,7 +43,10 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
 }
 
 func UpdateUser(email string, user models.UserRequest) error {
-  return repository.UpdateUser(email, user)
+  if err := repository.UpdateUser(email, user); err != nil {
+    return errors.New("Error updating user")
+  }
+  return nil
 }
 
 func DeleteUser(id string) (string, error) {
