@@ -27,7 +27,7 @@ func SaveUser(userRequest models.UserRequest) (string, error) {
   user := models.NewUser(userRequest)
   res, err := collection.InsertOne(context.Background(), user)
   if err != nil {
-    log.Fatal(err)
+    log.Println("Error saving user:", err)
     return "", err
   }
   txt := fmt.Sprint("User account created successfully, ID:", res.InsertedID)
