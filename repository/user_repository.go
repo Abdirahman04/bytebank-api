@@ -91,7 +91,7 @@ func GetUserById(id string) (models.User, error) {
 func UpdateUser(email string, user models.UserRequest) error {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
-  filter := bson.D{{"email", email}}
+  filter := bson.M{"email": email}
  
   update := bson.M{"$set": bson.M{
     "first_name": user.FirstName,
@@ -103,6 +103,7 @@ func UpdateUser(email string, user models.UserRequest) error {
 
   _, err := collection.UpdateOne(context.Background(), filter, update)
   if err != nil {
+    log.Println("Error updating user:", err)
     return err
   }
   return nil
