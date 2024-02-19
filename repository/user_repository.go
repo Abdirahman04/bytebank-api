@@ -61,7 +61,7 @@ func GetUsers() ([]models.UserResponse, error) {
 func GetUserByEmail(email string) (models.UserResponse, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
-  filter := bson.D{{"email", email}}
+  filter := bson.M{"email": email}
   var rawUser models.User
   err := collection.FindOne(context.Background(), filter).Decode(&rawUser)
   if err != nil {
