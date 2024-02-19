@@ -10,6 +10,7 @@ import (
 func SetAccountRoutes(router *mux.Router) {
   router.HandleFunc("/accounts", handlers.GetAccounts).Methods(http.MethodGet)
   router.HandleFunc("/accounts/{id}", handlers.GetAccountById).Methods(http.MethodGet)
+  router.HandleFunc("/accounts/customer/{id}", handlers.GetAccountByCustomerId).Methods(http.MethodGet)
   router.HandleFunc("/accounts", handlers.PostAccount).Methods(http.MethodPost)
   router.HandleFunc("/accounts/{id}", handlers.DeleteAccount).Methods(http.MethodDelete)
 }
