@@ -20,7 +20,8 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
   }
   res, err := services.SaveUser(newUser)
   if err != nil {
-    log.Fatal(err)
+    log.Printf("Error saving user: %v", err)
+    json.NewEncoder(w).Encode(err.Error())
     return
   }
   w.WriteHeader(http.StatusCreated)

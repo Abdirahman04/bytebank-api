@@ -20,7 +20,9 @@ func PostAccount(w http.ResponseWriter, r *http.Request) {
   }
   res, err := services.PostAccount(account)
   if err != nil {
-    log.Println("Error saving account", err)
+    log.Println("Error saving account: ", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   json.NewEncoder(w).Encode(res)
 }
