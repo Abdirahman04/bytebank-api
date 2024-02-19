@@ -64,6 +64,7 @@ func GetAccountById(id string) (*models.Account, error) {
 }
 
 func GetAccountsByCustomerId(id string) ([]models.Account, error) {
+  log.Println("GetAccountsByCustomerId rep hit")
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
   objectId, err := primitive.ObjectIDFromHex(id)
