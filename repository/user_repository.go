@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -40,8 +41,8 @@ func GetUsers() ([]models.UserResponse, error) {
   filter := bson.D{}
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
-    log.Fatal(err)
-    return nil, err
+    log.Println("Error getting users", err)
+    return nil, errors.New("No users found")
   }
   defer curr.Close(context.Background())
   var users []models.UserResponse
@@ -49,7 +50,7 @@ func GetUsers() ([]models.UserResponse, error) {
     var rawUser models.User
     err := curr.Decode(&rawUser)
     if err != nil {
-      return nil, err
+      continue
     }
     user := models.NewUserResponse(rawUser)
     users = append(users, user)
