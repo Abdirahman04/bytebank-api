@@ -53,9 +53,10 @@ func GetAccountById(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAccountByCustomerId(w http.ResponseWriter, r *http.Request) {
+  log.Println("GetAccountsByCustomerId hand hit")
   w.Header().Set("Content-Type", "application/json")
   id := mux.Vars(r)["id"]
-  res, err := services.GetAccountById(id)
+  res, err := services.GetAccountsByCustomerId(id)
   if err != nil {
     log.Println("Error getting account by customer id:", err)
     json.NewEncoder(w).Encode(err.Error())
@@ -70,7 +71,9 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request) {
   id := mux.Vars(r)["id"]
   res, err := services.DeleteAccount(id)
   if err != nil {
-    log.Fatal(err)
+    log.Println("Error deleting account:", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   json.NewEncoder(w).Encode(res)
 }
