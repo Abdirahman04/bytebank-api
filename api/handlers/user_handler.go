@@ -20,7 +20,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
   }
   res, err := services.SaveUser(newUser)
   if err != nil {
-    log.Printf("Error saving user: %v", err)
+    log.Println("Error saving user:", err)
     json.NewEncoder(w).Encode(err.Error())
     return
   }
@@ -32,7 +32,9 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   users, err := services.GetUsers()
   if err != nil {
-    http.Error(w, "Bad request", http.StatusBadRequest)
+    log.Println("Can't get users:", err)
+    w.WriteHeader(http.StatusNotFound)
+    json.NewEncoder(w).Encode(err.Error())
   }
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(users)
