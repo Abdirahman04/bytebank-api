@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -76,7 +75,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
   json.NewDecoder(r.Body).Decode(&user)
   err := services.UpdateUser(email, user)
   if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
+    w.WriteHeader(http.StatusNotFound)
     log.Println("Error updating user:", err)
     json.NewEncoder(w).Encode(err.Error())
     return
@@ -91,7 +90,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
   res, err := services.DeleteUser(id)
   if err != nil {
     log.Println("Error deleting user:", err)
-    w.WriteHeader(http.StatusInternalServerError)
+    w.WriteHeader(http.StatusNotFound)
     json.NewEncoder(w).Encode(err.Error())
     return
   }
