@@ -119,6 +119,7 @@ func DeleteUser(id string) (string, error) {
   filter := bson.M{"_id": objectId}
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
+    log.Println("Error deleting user:", err)
     return "", err
   }
   return fmt.Sprintf("Deleted %v documents\n", res), nil
