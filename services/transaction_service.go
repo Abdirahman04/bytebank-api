@@ -8,6 +8,10 @@ import (
 )
 
 func SaveTransaction(transaction models.TransactionRequest) (string, error) {
+  _, err := repository.GetAccountById(transaction.AccountID)
+  if err != nil {
+    return "", err
+  }
   newTransaction := models.NewTransaction(transaction)
   res, err := repository.SaveTransaction(newTransaction)
   return res, err

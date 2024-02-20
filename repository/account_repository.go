@@ -67,21 +67,19 @@ func GetAccountsByCustomerId(id string) ([]models.Account, error) {
   log.Println("GetAccountsByCustomerId rep hit")
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
-  objectId, err := primitive.ObjectIDFromHex(id)
-  if err != nil {
-    return nil, err
-  }
-  filter := bson.M{"customer_id": objectId}
-  var accounts []models.Account
+  filter := bson.M{"customer_id": id}
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
+    log.Println(err.Error())
     return nil, err
   }
   defer curr.Close(context.Background())
+  var accounts []models.Account
   for curr.Next(context.Background()) {
     var account models.Account
     err = curr.Decode(&account)
     if err != nil {
+      log.Println(err.Error())
       continue
     }
     accounts = append(accounts, account)
