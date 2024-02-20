@@ -3,13 +3,15 @@ package api
 import (
 	"fmt"
 	"net/http"
-  "log"
 
 	"github.com/Abdirahman04/bytebank-api/api/routes"
+	"github.com/Abdirahman04/bytebank-api/logger"
 	"github.com/gorilla/mux"
 )
 
 func Start() error {
+  logger := logger.NewAggregatedLogger()
+  logger.Info("Server started")
   router := mux.NewRouter()
 
   routes.SetUserRoutes(router)
@@ -20,7 +22,7 @@ func Start() error {
   fmt.Printf("Server is running on port %s\n", port)
   err := http.ListenAndServe(port, router)
   if err != nil {
-    log.Fatal("Server failed to start: ", err)
+    logger.Error(err.Error())
     return err
   }
   return nil

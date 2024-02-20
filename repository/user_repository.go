@@ -66,7 +66,7 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
   err := collection.FindOne(context.Background(), filter).Decode(&rawUser)
   if err != nil {
     log.Println("Error getting user by email:", err)
-    return models.UserResponse{}, err
+    return models.UserResponse{}, errors.New("no user found")
   }
   user := models.NewUserResponse(rawUser)
   return user, nil
@@ -83,7 +83,7 @@ func GetUserById(id string) (models.User, error) {
   var user models.User
   err = collection.FindOne(context.Background(), filter).Decode(&user)
   if err != nil {
-    return user, err
+    return user, errors.New("no user found")
   }
   return user, nil
 }
@@ -108,7 +108,7 @@ func UpdateUser(id string, user models.UserRequest) error {
   _, err = collection.UpdateOne(context.Background(), filter, update)
   if err != nil {
     log.Println("Error updating user:", err)
-    return err
+    return errors.New("error updating user")
   }
   return nil
 }
@@ -124,7 +124,7 @@ func DeleteUser(id string) (string, error) {
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     log.Println("Error deleting user:", err)
-    return "", err
+    return "", errors.New("error deleting user")
   }
   return fmt.Sprintf("Deleted %v documents\n", res), nil
 }

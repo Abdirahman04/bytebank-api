@@ -30,8 +30,7 @@ func GetAccounts() ([]models.Account, error) {
   filter := bson.D{}
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
-    log.Fatal(err)
-    return nil, err
+    return nil, errors.New("no account found")
   }
   defer curr.Close(context.Background())
   var accounts []models.Account
@@ -39,8 +38,7 @@ func GetAccounts() ([]models.Account, error) {
     var account models.Account
     err := curr.Decode(&account)
     if err != nil {
-      log.Fatal(err)
-      return nil, err
+      return nil, errors.New("no account found")
     }
     accounts = append(accounts, account)
   }
@@ -58,7 +56,7 @@ func GetAccountById(id string) (models.Account, error) {
   var account models.Account
   err = collection.FindOne(context.Background(), filter).Decode(&account)
   if err != nil {
-    return models.Account{}, err
+    return models.Account{}, errors.New("no account found")
   }
   return account, err
 }
@@ -71,7 +69,7 @@ func GetAccountsByCustomerId(id string) ([]models.Account, error) {
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
     log.Println(err.Error())
-    return nil, err
+    return nil, errors.New("no account found")
   }
   defer curr.Close(context.Background())
   var accounts []models.Account
@@ -105,7 +103,7 @@ func ChangeAmount(id string, amount float32) (string, error) {
   res, err := collection.UpdateOne(context.Background(), filter, update)
   if err != nil {
     log.Println("Error changing amount:", err)
-    return "", err
+    return "", errors.New("error changing amount")
   }
   return fmt.Sprint("Updated", res), nil
 }
@@ -121,7 +119,7 @@ func DeleteAccount(id string) (string, error) {
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     log.Fatal(err)
-    return "", err
+    return "", errors.New("error deleting account")
   }
   return fmt.Sprint("Deleted", res.DeletedCount), nil
 }

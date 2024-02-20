@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Abdirahman04/bytebank-api/models"
@@ -14,7 +15,7 @@ func SaveTransaction(transaction models.Transaction) (string, error) {
   collection := client.Database("bytebank").Collection("transactions")
   res, err := collection.InsertOne(context.Background(), transaction)
   if err != nil {
-    return "", err
+    return "", errors.New("error saving transaction")
   }
   return fmt.Sprintf("added %v", res.InsertedID), nil
 }
@@ -25,7 +26,7 @@ func GetTransactions() ([]models.Transaction, error) {
   filter := bson.D{}
   res, err := collection.Find(context.Background(), filter)
   if err != nil {
-    return nil, err
+    return nil, errors.New("no transaction found")
   }
   defer res.Close(context.Background())
   var transactions []models.Transaction
@@ -51,7 +52,7 @@ func GetTransactionById(id string) (models.Transaction, error) {
   filter := bson.M{"_id": objectId}
   err = collection.FindOne(context.Background(), filter).Decode(&transaction)
   if err != nil {
-    return transaction, err
+    return transaction, errors.New("no transaction found")
   }
   return transaction, nil
 }
@@ -66,7 +67,7 @@ func GetTransactionsByAccountId(id string) ([]models.Transaction, error) {
   }}
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
-    return nil, err
+    return nil, errors.New("no transaction found")
   }
   defer curr.Close(context.Background())
   for curr.Next(context.Background()) {
@@ -93,7 +94,7 @@ func DeleteTransaction(id string) (string, error) {
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     fmt.Println("err with deleting")
-    return "", err
+    return "", errors.New("error deleting transaction")
   }
   return fmt.Sprint("Deleted", res.DeletedCount), nil
 }
@@ -107,7 +108,7 @@ func DeleteTransactionsByAccountId(id string) (string, error) {
   }}
   res, err := collection.DeleteMany(context.Background(), filter)
   if err != nil {
-    return "", err
+    return "", errors.New("error deleting transactions")
   }
   return fmt.Sprint("Deleted", res.DeletedCount), nil
 }
