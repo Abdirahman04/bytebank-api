@@ -5,10 +5,15 @@ import (
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
+	"github.com/Abdirahman04/bytebank-api/validations"
 )
 
 func SaveTransaction(transaction models.TransactionRequest) (string, error) {
-  _, err := repository.GetAccountById(transaction.AccountID)
+  err := validations.ValidateTransaction(transaction)
+  if err != nil {
+    return "", err
+  }
+  _, err = repository.GetAccountById(transaction.AccountID)
   if err != nil {
     return "", err
   }
