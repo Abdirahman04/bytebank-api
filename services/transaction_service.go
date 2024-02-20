@@ -13,9 +13,30 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
   if err != nil {
     return "", err
   }
-  _, err = repository.GetAccountById(transaction.AccountID)
+  account, err := repository.GetAccountById(transaction.AccountID)
   if err != nil {
     return "", err
+  }
+  switch transaction.TransactionType {
+  case "deposit":
+    _, err := DepositAccount(account.AccountID, transaction.Balance)
+    if err != nil {
+      return "", err
+    }
+  case "withdraw":
+    _, err := WithdrawAccount(account.AccountID, transaction.Balance)
+    if err != nil {
+      return "", err
+    }
+  case "transfer":
+    _, err := DepositAccount(account.AccountID, transaction.Balance)
+    if err != nil {
+      return "", err
+    }
+    _, err = WithdrawAccount(transaction.Target, transaction.Balance)
+    if err != nil {
+      return "", err
+    }
   }
   newTransaction := models.NewTransaction(transaction)
   res, err := repository.SaveTransaction(newTransaction)
