@@ -17,7 +17,7 @@ func Start() error {
   routes.SetTransactionRoutes(router)
 
   port := ":8080"
-  fmt.Printf("Server is running on port %s", port)
+  fmt.Printf("Server is running on port %s\n", port)
   err := http.ListenAndServe(port, router)
   if err != nil {
     log.Fatal("Server failed to start: ", err)
