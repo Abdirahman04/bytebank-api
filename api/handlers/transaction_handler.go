@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Abdirahman04/bytebank-api/models"
@@ -15,11 +16,15 @@ func PostTransaction(w http.ResponseWriter, r *http.Request) {
   var transaction models.TransactionRequest
   err := json.NewDecoder(r.Body).Decode(&transaction)
   if err != nil {
-    http.Error(w, "Bad request", http.StatusBadRequest)
+    log.Println("Error decoding transaction:", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   res, err := services.SaveTransaction(transaction)
   if err != nil {
-    http.Error(w, "Bad request", http.StatusBadRequest)
+    log.Println("Error saving transaction:", err)
+    json.NewEncoder(w).Encode(err.Error())
+    return
   }
   json.NewEncoder(w).Encode(res)
 }
