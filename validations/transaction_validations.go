@@ -8,7 +8,7 @@ import (
 
 func ValidateTransaction(transaction models.TransactionRequest) error {
   typ := transaction.TransactionType
-  typs := [3]string{"deposit", "withdraw", "transafer"}
+  typs := [3]string{"deposit", "withdraw", "transfer"}
 
   for _, transType := range typs {
     if transType == typ {

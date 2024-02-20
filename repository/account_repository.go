@@ -92,15 +92,19 @@ func ChangeAmount(id string, amount float32) (string, error) {
   collection := client.Database("bytebank").Collection("accounts")
   account, err := GetAccountById(id)
   if err != nil {
-    log.Fatal(err)
+    log.Println("Error getting account:", err)
+    return "", err
+  }
+  objectId, err := primitive.ObjectIDFromHex(id)
+  if err != nil {
     return "", err
   }
   newAmount := account.Amount + amount
-  filter := bson.M{"_id": id}
+  filter := bson.M{"_id": objectId}
   update := bson.M{"$set": bson.M{"amount": newAmount}}
   res, err := collection.UpdateOne(context.Background(), filter, update)
   if err != nil {
-    log.Fatal(err)
+    log.Println("Error changing amount:", err)
     return "", err
   }
   return fmt.Sprint("Updated", res), nil

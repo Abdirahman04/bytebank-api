@@ -1,7 +1,9 @@
 package services
 
 import (
+	"errors"
 	"fmt"
+	"log"
 
 	"github.com/Abdirahman04/bytebank-api/models"
 	"github.com/Abdirahman04/bytebank-api/repository"
@@ -13,23 +15,39 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
   if err != nil {
     return "", err
   }
+  if transaction.Balance < 10 {
+    return "", errors.New("transaction amount should be atleast 10")
+  }
   account, err := repository.GetAccountById(transaction.AccountID)
   if err != nil {
     return "", err
   }
   switch transaction.TransactionType {
   case "deposit":
-    _, err := DepositAccount(account.AccountID, transaction.Balance)
+    log.Println("deposit")
+    _, err := DepositAccount(transaction.AccountID, transaction.Balance)
     if err != nil {
       return "", err
     }
   case "withdraw":
-    _, err := WithdrawAccount(account.AccountID, transaction.Balance)
+    log.Println("withdraw")
+    if transaction.Balance > account.Amount {
+      return "", errors.New("the amount exceeds the balance in the account")
+    }
+    _, err := WithdrawAccount(transaction.AccountID, transaction.Balance)
     if err != nil {
       return "", err
     }
   case "transfer":
-    _, err := DepositAccount(account.AccountID, transaction.Balance)
+    log.Println("transafer")
+    if transaction.Balance > account.Amount {
+      return "", errors.New("the amount exceeds the balance in the account")
+    }
+    _, err := GetAccountById(transaction.Target)
+    if err != nil {
+      return "", err
+    }
+    _, err = DepositAccount(transaction.AccountID, transaction.Balance)
     if err != nil {
       return "", err
     }
