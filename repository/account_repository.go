@@ -47,10 +47,10 @@ func GetAccounts() ([]models.Account, error) {
   return accounts, nil
 }
 
-func GetAccountById(id string) (*models.Account, error) {
+func GetAccountById(id string) (models.Account, error) {
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
-    return nil, err
+    return models.Account{}, err
   }
   client := Connect()
   collection := client.Database("bytebank").Collection("accounts")
@@ -58,9 +58,9 @@ func GetAccountById(id string) (*models.Account, error) {
   var account models.Account
   err = collection.FindOne(context.Background(), filter).Decode(&account)
   if err != nil {
-    return nil, err
+    return models.Account{}, err
   }
-  return &account, err
+  return account, err
 }
 
 func GetAccountsByCustomerId(id string) ([]models.Account, error) {

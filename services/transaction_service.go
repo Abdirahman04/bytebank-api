@@ -47,11 +47,11 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
     if err != nil {
       return "", err
     }
-    _, err = DepositAccount(transaction.AccountID, transaction.Balance)
+    _, err = WithdrawAccount(transaction.AccountID, transaction.Balance)
     if err != nil {
       return "", err
     }
-    _, err = WithdrawAccount(transaction.Target, transaction.Balance)
+    _, err = DepositAccount(transaction.Target, transaction.Balance)
     if err != nil {
       return "", err
     }

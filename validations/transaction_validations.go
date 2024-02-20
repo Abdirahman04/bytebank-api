@@ -7,6 +7,10 @@ import (
 )
 
 func ValidateTransaction(transaction models.TransactionRequest) error {
+  if transaction.TransactionType == "transafer" && transaction.Target == "" {
+    return errors.New("no target account id provided")
+  }
+
   typ := transaction.TransactionType
   typs := [3]string{"deposit", "withdraw", "transfer"}
 
