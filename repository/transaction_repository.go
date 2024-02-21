@@ -13,10 +13,12 @@ import (
 func SaveTransaction(transaction models.Transaction) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
+  
   res, err := collection.InsertOne(context.Background(), transaction)
   if err != nil {
     return "", errors.New("error saving transaction")
   }
+
   return fmt.Sprintf("added %v", res.InsertedID), nil
 }
 
@@ -24,11 +26,14 @@ func GetTransactions() ([]models.Transaction, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
   filter := bson.D{}
+
   res, err := collection.Find(context.Background(), filter)
   if err != nil {
     return nil, errors.New("no transaction found")
   }
+
   defer res.Close(context.Background())
+
   var transactions []models.Transaction
   for res.Next(context.Background()) {
     var transaction models.Transaction
@@ -38,38 +43,48 @@ func GetTransactions() ([]models.Transaction, error) {
     }
     transactions = append(transactions, transaction)
   }
+
   return transactions, nil
 }
 
 func GetTransactionById(id string) (models.Transaction, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
+
   var transaction models.Transaction
+
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
     return transaction, err
   }
+
   filter := bson.M{"_id": objectId}
   err = collection.FindOne(context.Background(), filter).Decode(&transaction)
   if err != nil {
     return transaction, errors.New("no transaction found")
   }
+
   return transaction, nil
 }
 
 func GetTransactionsByAccountId(id string) ([]models.Transaction, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
+
   var transactions []models.Transaction
+
   filter := bson.M{"$or": []bson.M{
     {"account_id": id},
     {"target": id},
   }}
+
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
     return nil, errors.New("no transaction found")
   }
+
   defer curr.Close(context.Background())
+
   for curr.Next(context.Background()) {
     var transaction models.Transaction
     err = curr.Decode(&transaction)
@@ -78,24 +93,29 @@ func GetTransactionsByAccountId(id string) ([]models.Transaction, error) {
     }
     transactions = append(transactions, transaction)
   }
+
   return transactions, nil
 }
 
 func DeleteTransaction(id string) (string, error) {
   fmt.Println("rep-hit")
+
   client := Connect()
   collection := client.Database("bytebank").Collection("transactions")
+
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
     fmt.Println("err with objectId")
     return "", err
   }
+
   filter := bson.M{"_id": objectId}
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     fmt.Println("err with deleting")
     return "", errors.New("error deleting transaction")
   }
+
   return fmt.Sprint("Deleted", res.DeletedCount), nil
 }
 
@@ -106,9 +126,11 @@ func DeleteTransactionsByAccountId(id string) (string, error) {
     {"account_id": id},
     {"target": id},
   }}
+
   res, err := collection.DeleteMany(context.Background(), filter)
   if err != nil {
     return "", errors.New("error deleting transactions")
   }
+
   return fmt.Sprint("Deleted", res.DeletedCount), nil
 }

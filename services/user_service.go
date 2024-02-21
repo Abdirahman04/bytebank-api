@@ -14,6 +14,7 @@ func SaveUser(user models.UserRequest) (string, error) {
   if err != nil {
     return "", err
   }
+
   res, err := repository.SaveUser(user)
   return res, err
 }
@@ -29,6 +30,7 @@ func GetUserById(id string) (models.UserResponse, error) {
     txt := fmt.Sprintf("no user with id %v found", id)
     return models.UserResponse{}, errors.New(txt)
   }
+
   user := models.NewUserResponse(res)
   return user, nil
 }
@@ -39,6 +41,7 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
     txt := fmt.Sprintf("no user with email %v found", email)
     return models.UserResponse{}, errors.New(txt)
   }
+
   return res, nil
 }
 
@@ -46,9 +49,11 @@ func UpdateUser(id string, user models.UserRequest) error {
   if err := validations.ValidateUser(user); err != nil {
     return err
   }
+
   if err := repository.UpdateUser(id, user); err != nil {
     return errors.New("Error updating user")
   }
+
   return nil
 }
 
@@ -57,6 +62,7 @@ func DeleteUser(id string) (string, error) {
   if err != nil {
     return "", err
   }
+
   for _, account := range accounts {
     _, err := repository.DeleteTransactionsByAccountId(account.AccountID)
     if err != nil {

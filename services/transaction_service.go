@@ -15,13 +15,16 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
   if err != nil {
     return "", err
   }
+
   if transaction.Balance < 10 {
     return "", errors.New("transaction amount should be atleast 10")
   }
+
   account, err := repository.GetAccountById(transaction.AccountID)
   if err != nil {
     return "", err
   }
+
   switch transaction.TransactionType {
   case "deposit":
     log.Println("deposit")
@@ -56,6 +59,7 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
       return "", err
     }
   }
+
   newTransaction := models.NewTransaction(transaction)
   res, err := repository.SaveTransaction(newTransaction)
   return res, err
@@ -63,32 +67,38 @@ func SaveTransaction(transaction models.TransactionRequest) (string, error) {
 
 func GetTransactions() ([]models.TransactionResponse, error) {
   var transactions []models.TransactionResponse
+
   res, err := repository.GetTransactions()
   for _, trans := range res {
     newTransaction := models.NewTransactionResponse(trans)
     transactions = append(transactions, newTransaction)
   }
+
   return transactions, err
 }
 
 func GetTransactionById(id string) (models.TransactionResponse, error) {
   transaction, err := repository.GetTransactionById(id)
+
   newTransaction := models.NewTransactionResponse(transaction)
   return newTransaction, err
 }
 
 func GetTransactionsByAccountId(id string) ([]models.TransactionResponse, error) {
   var transactions []models.TransactionResponse
+
   res, err := repository.GetTransactionsByAccountId(id)
   for _, trans := range res {
     newTransaction := models.NewTransactionResponse(trans)
     transactions = append(transactions, newTransaction)
   }
+
   return transactions, err
 }
 
 func DeleteTransaction(id string) (string, error) {
   res, err := repository.DeleteTransaction(id)
+
   fmt.Println("serv-hit")
   return res, err
 }

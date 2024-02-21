@@ -17,6 +17,7 @@ import (
 func Connect() *mongo.Client {
   ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
   defer cancel()
+
   client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
   if err != nil { return nil }
   return client
@@ -25,12 +26,14 @@ func Connect() *mongo.Client {
 func SaveUser(userRequest models.UserRequest) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
+
   user := models.NewUser(userRequest)
   res, err := collection.InsertOne(context.Background(), user)
   if err != nil {
     log.Println("Error saving user:", err)
     return "", err
   }
+
   txt := fmt.Sprint("User account created successfully, ID:", res.InsertedID)
   return txt, nil
 }
@@ -39,12 +42,15 @@ func GetUsers() ([]models.UserResponse, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
   filter := bson.D{}
+
   curr, err := collection.Find(context.Background(), filter)
   if err != nil {
     log.Println("Error getting users", err)
     return nil, errors.New("No users found")
   }
+
   defer curr.Close(context.Background())
+
   var users []models.UserResponse
   for curr.Next(context.Background()) {
     var rawUser models.User
@@ -55,6 +61,7 @@ func GetUsers() ([]models.UserResponse, error) {
     user := models.NewUserResponse(rawUser)
     users = append(users, user)
   }
+
   return users, nil
 }
 
@@ -62,12 +69,14 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
   filter := bson.M{"email": email}
+
   var rawUser models.User
   err := collection.FindOne(context.Background(), filter).Decode(&rawUser)
   if err != nil {
     log.Println("Error getting user by email:", err)
     return models.UserResponse{}, errors.New("no user found")
   }
+
   user := models.NewUserResponse(rawUser)
   return user, nil
 }
@@ -75,26 +84,32 @@ func GetUserByEmail(email string) (models.UserResponse, error) {
 func GetUserById(id string) (models.User, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
+
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
     return models.User{}, err
   }
+
   filter := bson.M{"_id": objectId}
+
   var user models.User
   err = collection.FindOne(context.Background(), filter).Decode(&user)
   if err != nil {
     return user, errors.New("no user found")
   }
+
   return user, nil
 }
 
 func UpdateUser(id string, user models.UserRequest) error {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
+
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
     return err
   }
+
   filter := bson.M{"_id": objectId}
  
   update := bson.M{"$set": bson.M{
@@ -110,21 +125,26 @@ func UpdateUser(id string, user models.UserRequest) error {
     log.Println("Error updating user:", err)
     return errors.New("error updating user")
   }
+
   return nil
 }
 
 func DeleteUser(id string) (string, error) {
   client := Connect()
   collection := client.Database("bytebank").Collection("users")
+
   objectId, err := primitive.ObjectIDFromHex(id)
   if err != nil {
     return "", err
   }
+
   filter := bson.M{"_id": objectId}
+
   res, err := collection.DeleteOne(context.Background(), filter)
   if err != nil {
     log.Println("Error deleting user:", err)
     return "", errors.New("error deleting user")
   }
+
   return fmt.Sprintf("Deleted %v documents\n", res), nil
 }

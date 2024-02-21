@@ -14,7 +14,9 @@ import (
 func PostUser(w http.ResponseWriter, r *http.Request) {
   al := logger.NewAggregatedLogger()
   al.Info(logger.EndpointLog("PostUser", r))
+
   w.Header().Set("Content-Type", "application/json")
+
   var newUser models.UserRequest
   err := json.NewDecoder(r.Body).Decode(&newUser)
   if err != nil {
@@ -23,6 +25,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   res, err := services.SaveUser(newUser)
   if err != nil {
     al.Warn(err.Error())
@@ -30,6 +33,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   w.WriteHeader(http.StatusCreated)
   json.NewEncoder(w).Encode(res)
 } 
@@ -37,7 +41,9 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 func GetUsers(w http.ResponseWriter, r *http.Request) {
   al := logger.NewAggregatedLogger()
   al.Info(logger.EndpointLog("GetUsers", r))
+
   w.Header().Set("Content-Type", "application/json")
+
   users, err := services.GetUsers()
   if err != nil {
     al.Warn(err.Error())
@@ -46,6 +52,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(users)
 }
@@ -53,7 +60,9 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 func GetUserById(w http.ResponseWriter, r *http.Request) {
   al := logger.NewAggregatedLogger()
   al.Info(logger.EndpointLog("GetUserById", r))
+
   w.Header().Set("Content-Type", "application/json")
+
   id := mux.Vars(r)["id"]
   user, err := services.GetUserById(id)
   if err != nil {
@@ -63,6 +72,7 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(user)
 }
@@ -70,7 +80,9 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
   al := logger.NewAggregatedLogger()
   al.Info(logger.EndpointLog("GetUserByEmail", r))
+
   w.Header().Set("Content-Type", "application/json")
+
   email := mux.Vars(r)["email"]
   user, err := services.GetUserByEmail(email)
   if err != nil {
@@ -80,6 +92,7 @@ func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(user)
 }
@@ -87,7 +100,9 @@ func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
   al := logger.NewAggregatedLogger()
   al.Info(logger.EndpointLog("UpdateUser", r))
+
   w.Header().Set("Content-Type", "application/json")
+
   email := mux.Vars(r)["email"]
   var user models.UserRequest
   json.NewDecoder(r.Body).Decode(&user)
@@ -99,6 +114,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode("Update successful")
 }
@@ -106,7 +122,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
   al := logger.NewAggregatedLogger()
   al.Info(logger.EndpointLog("DeleteUser", r))
+
   w.Header().Set("Content-Type", "application/json")
+
   id := mux.Vars(r)["id"]
   res, err := services.DeleteUser(id)
   if err != nil {
@@ -116,6 +134,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(err.Error())
     return
   }
+
   w.WriteHeader(http.StatusOK)
   json.NewEncoder(w).Encode(res)
 }
