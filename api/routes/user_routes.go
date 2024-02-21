@@ -12,6 +12,6 @@ func SetUserRoutes(router *mux.Router) {
   router.HandleFunc("/users", handlers.GetUsers).Methods(http.MethodGet)
   router.HandleFunc("/users/{id}", handlers.GetUserById).Methods(http.MethodGet)
   router.HandleFunc("/users/email/{email}", handlers.GetUserByEmail).Methods(http.MethodGet)
-  router.HandleFunc("/users/{email}", handlers.UpdateUser).Methods(http.MethodPut)
+  router.HandleFunc("/users/{id}", handlers.UpdateUser).Methods(http.MethodPut)
   router.HandleFunc("/users/{id}", handlers.DeleteUser).Methods(http.MethodDelete)
 }

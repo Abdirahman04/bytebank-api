@@ -119,6 +119,7 @@ func UpdateUser(id string, user models.UserRequest) error {
     "phone_number": user.PhoneNumber,
     "pin": user.Pin,
   }}
+  log.Println(user)
 
   _, err = collection.UpdateOne(context.Background(), filter, update)
   if err != nil {

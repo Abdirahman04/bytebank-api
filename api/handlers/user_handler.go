@@ -103,10 +103,10 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
   w.Header().Set("Content-Type", "application/json")
 
-  email := mux.Vars(r)["email"]
+  id := mux.Vars(r)["id"]
   var user models.UserRequest
   json.NewDecoder(r.Body).Decode(&user)
-  err := services.UpdateUser(email, user)
+  err := services.UpdateUser(id, user)
   if err != nil {
     al.Warn(err.Error())
     w.WriteHeader(http.StatusNotFound)
